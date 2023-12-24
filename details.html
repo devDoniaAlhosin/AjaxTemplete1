@@ -1,0 +1,66 @@
+<!-- details.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details</title>
+  <link rel="stylesheet" href="assets/css/External/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div id="details"></div>
+
+  <script>
+    // Function to extract the index from the URL query parameters
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    var ajax = new XMLHttpRequest();
+    ajax.open("GET", "https://fakestoreapi.com/products");
+    ajax.send();
+
+    ajax.onreadystatechange = function () {
+      if (ajax.readyState == 4) {
+        var data = JSON.parse(ajax.response);
+        var index = getQueryParam("index"); // Get the index from the URL
+
+        // Check if the index is valid and within the range of data length
+        if (index !== null && index >= 0 && index < data.length) {
+          var detailsContainer = document.getElementById("details");
+          var item = data[index];
+
+          // Display details for the selected item
+          detailsContainer.innerHTML = `<section class="pro">
+            <div class="container">
+                <div class="row">
+                    <div class="pro-img">
+                        <img src="${item.image}" alt="">
+                    </div>
+                    <div class="pro-content">
+                        <h3> ${item.title}</h3>
+                        <ul>
+                            <li ><i class="fa-solid fa-tag"></i></i> $${item.price}</li>
+                            <li><i class="fa-brands fa-shopify"></i>${item.description}
+                              </li>
+                            <li><i class="fa-solid fa-list"></i>${item.category}  </li>
+                            <li><i class="fa-solid fa-star"></i> ${item.rating.rate}  </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        </section>`;
+        } else {
+          // Display an error message if the index is invalid
+          var detailsContainer = document.getElementById("details");
+          detailsContainer.innerHTML = "<p>Error: Invalid item index.</p>";
+        }
+      }
+    };
+  </script>
+</body>
+</html>
